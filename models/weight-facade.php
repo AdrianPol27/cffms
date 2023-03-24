@@ -8,6 +8,13 @@
       return $sql;
     }
 
+    public function verifyWeightNumFromDate($PLUNum, $addedOn) {
+      $sql = $this->connect()->prepare("SELECT * FROM weight WHERE plu_num = ? AND added_on = ? AND is_deleted = 0");
+      $sql->execute([$PLUNum, $addedOn]);
+      $count = $sql->rowCount();
+      return $count;
+    }
+
     public function addWeight($PLUNum, $PLUDescription, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted) {
       $sql = $this->connect()->prepare("INSERT INTO weight(plu_num, plu_desc, fb_bi, delivery_cw, delivery_sn, ps, bi_d_ps, added_by, added_on, updated_by, deleted_by, is_deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       $sql->execute([$PLUNum, $PLUDescription, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted]);

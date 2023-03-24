@@ -4,7 +4,7 @@
     private $host = "localhost";
     private $user = "root";
     private $pass = "";
-    private $db = "wscs";
+    private $db = "cffms";
 
     protected function connect() {
       $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->db;

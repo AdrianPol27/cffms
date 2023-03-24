@@ -55,9 +55,14 @@
     } if (empty($ps)) {
       array_push($invalid, 'PS should not be empty!');
     } else {
-      $addWeight = $weightFacade->addWeight($PLUNum, $PLUDescription, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted);
-      if ($addWeight) {
-        array_push($success, 'Weight has been added successfully!');
+      $verifyWeightNumFromDate = $weightFacade->verifyWeightNumFromDate($PLUNum, $addedOn);
+      if ($verifyWeightNumFromDate > 0) {
+        array_push($invalid, "PLU weight already been added for this day!");
+      } else {
+        $addWeight = $weightFacade->addWeight($PLUNum, $PLUDescription, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted);
+        if ($addWeight) {
+          header("Location: weight.php?add_weight=Weight has been added successfully!");
+        }
       }
     }
   }
@@ -159,12 +164,12 @@
                       <?php
                         $PLUS = $PLUFacade->fetchAllPLU()->fetchAll();
                         foreach($PLUS as $PLU) { ?>
-                        <option value="<?= $PLU["plu_desc"] ?>"><?= $PLU["plu_desc"] ?></option>
+                        <option value="<?= $PLU["plu_desc"] ?>"><?= $PLU["plu_num"] . ' - ' . $PLU["plu_desc"] ?></option>
                       <?php } ?>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="fbBi">FB-BI</label>
+                    <label for="fbBi">BI</label>
                     <input type="text" class="form-control" id="fbBi" placeholder="Enter FB-BI" name="fb_bi">
                   </div>
                   <div class="form-group">

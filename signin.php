@@ -21,10 +21,18 @@
 
       if ($verifyUsernameAndPassword > 0) {
         while ($row = $signIn->fetch(PDO::FETCH_ASSOC)) {
-          $_SESSION['user_id'] = $row['id'];
-          $_SESSION['full_name'] = $row['full_name'];
-          $_SESSION['user_type'] = $row['user_type'];
-          header('Location: index.php');
+          if ($row['is_logged_in'] == 1) {
+            array_push($invalid, "Access denied another user already been logged in!");
+          } else {
+            $_SESSION['user_id'] = $row['id'];
+            $userId = $_SESSION['user_id'];
+            $_SESSION['full_name'] = $row['full_name'];
+            $_SESSION['user_type'] = $row['user_type'];
+            $isLoggedIn = $userFacade->isLoggedIn($userId);
+            if ($isLoggedIn) {
+              header('Location: index.php');
+            } 
+          }
         }
       } else {
         array_push($invalid, "Incorrect username or password!");

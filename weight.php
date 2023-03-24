@@ -11,6 +11,7 @@
   $weightFacade = new WeightFacade;
 
 	$userId = 0;
+  $date = date("Y-m-d");
 
 	if (isset($_SESSION["user_id"])) {
 		$userId = $_SESSION["user_id"];
@@ -20,6 +21,10 @@
 	}
   if (isset($_SESSION["user_type"])) {
 		$userType = $_SESSION["user_type"];
+	}
+  if (isset($_GET["add_weight"])) {
+		$addWeightError = $_GET["add_weight"];
+    array_push($success, $addWeightError);
 	}
   if (isset($_GET["delete_weight"])) {
 		$deleteWeightError = $_GET["delete_weight"];
@@ -133,7 +138,7 @@
                       <tr>
                         <th>PLU #</th>
                         <th>PLU Description</th>
-                        <th>FB-BI</th>
+                        <th>BI</th>
                         <th>Delivery (CW)</th>
                         <th>Delivery (SN)</th>
                         <th>PS</th>
@@ -145,7 +150,11 @@
                     <tbody>
                       <?php
                         $weights = $weightFacade->fetchAllWeight()->fetchAll();
-                        foreach($weights as $weight) { ?>
+                        foreach($weights as $weight) { 
+                          if ($weight["added_on"] != $date) { 
+                            // Do nothing
+                          } else {
+                      ?>
                       <tr>
                         <td><?= $weight["plu_num"] ?></td>
                         <td><?= $weight["plu_desc"] ?></td>
@@ -154,17 +163,24 @@
                         <td><?= $weight["delivery_sn"] ?></td>
                         <td><?= $weight["ps"] ?></td>
                         <td><?= number_format($weight["bi_d_ps"], 2) ?></td>
-                        <td><?= number_format($weight["ei"], 2) ?></td>
                         <td>
-                          <?php if ($userType == 'admin' || $userType == 'supervisor') { ?>
+                          <?php
+                            if ($weight["ei"] == NULL) { 
+                              // Do nothing
+                            } else {
+                              echo number_format($weight["ei"], 2);
+                            }
+                          ?>
+                        </td>
+                        <td>
+                          <?php if ($userType == 'admin') { ?>
                             <a class="btn btn-info" href="view-weight.php?plu_desc=<?= $weight["plu_desc"] ?>&fb_bi=<?= $weight["fb_bi"] ?>&delivery_cw=<?= $weight["delivery_cw"] ?>&delivery_sn=<?= $weight["delivery_sn"] ?>&ps=<?= $weight["ps"] ?>&bi_d_ps=<?= $weight["bi_d_ps"] ?>&ei=<?= $weight["ei"] ?>&added_by=<?= $weight["added_by"] ?>&added_on=<?= $weight["added_on"] ?>&updated_by=<?= $weight["updated_by"] ?>&updated_on=<?= $weight["updated_on"] ?>&deleted_by=<?= $weight["deleted_by"] ?>&deleted_on=<?= $weight["deleted_on"] ?>"><i class="mdi mdi-eye"></i></a>
-                          <?php } ?>
-                          <a class="btn btn-primary text-white" href="update-weight.php?id=<?= $weight["id"]?>&fb_bi=<?= $weight["fb_bi"] ?>&delivery_cw=<?= $weight["delivery_cw"] ?>&delivery_sn=<?= $weight["delivery_sn"] ?>&ps=<?= $weight["ps"] ?>&bi_d_ps=<?= $weight["bi_d_ps"] ?>&ei=<?= $weight["ei"] ?>&added_by=<?= $weight["added_by"] ?>&added_on=<?= $weight["added_on"] ?>&updated_by=<?= $weight["updated_by"] ?>&updated_on=<?= $weight["updated_on"] ?>&deleted_by=<?= $weight["deleted_by"] ?>&deleted_on=<?= $weight["deleted_on"] ?>"><i class="mdi mdi-lead-pencil"></i></a>
-                          <?php if ($userType != 'admin') { ?>
+                            <a class="btn btn-primary text-white" href="update-weight.php?id=<?= $weight["id"]?>&fb_bi=<?= $weight["fb_bi"] ?>&delivery_cw=<?= $weight["delivery_cw"] ?>&delivery_sn=<?= $weight["delivery_sn"] ?>&ps=<?= $weight["ps"] ?>&bi_d_ps=<?= $weight["bi_d_ps"] ?>&ei=<?= $weight["ei"] ?>&added_by=<?= $weight["added_by"] ?>&added_on=<?= $weight["added_on"] ?>&updated_by=<?= $weight["updated_by"] ?>&updated_on=<?= $weight["updated_on"] ?>&deleted_by=<?= $weight["deleted_by"] ?>&deleted_on=<?= $weight["deleted_on"] ?>"><i class="mdi mdi-lead-pencil"></i></a>
+                            <a class="btn btn-danger text-white" href="delete-weight.php?plu_num=<?= $weight["plu_num"] ?>"><i class="mdi mdi-close-circle"></i></a> 
+                          <?php } if ($userType == 'encoder' || $userType == 'supervisor') { ?>
+                            <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target=".updateModal"><i class="mdi mdi-lead-pencil"></i></button>
                             <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target=".deleteModal"><i class="mdi mdi-close-circle"></i></button>
-                          <?php } else { ?>
-                            <a class="btn btn-danger text-white" href="delete-weight.php?plu_num=<?= $weight["plu_num"] ?>"><i class="mdi mdi-close-circle"></i></a>
-                          <?php } ?>
+                          <?php } } ?>
                         </td> 
                       </tr>
                       <?php } ?>
@@ -174,6 +190,24 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Update Modal -->
+   <div class="modal fade updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="m-0">You are not allowed to update this data, kindly contact the IT Department for update.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
