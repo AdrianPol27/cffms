@@ -167,7 +167,7 @@
                   <?php include('errors.php'); ?>
                   <div class="form-group">
                     <label for="fbBi">BI</label>
-                    <input type="text" class="form-control" id="fbBi" placeholder="Enter FB-BI" name="fb_bi" value="<?= $fbBi ?>">
+                    <input type="text" class="form-control" id="fbBi" placeholder="Enter BI" name="fb_bi" value="<?= $fbBi ?>">
                   </div>
                   <div class="form-group">
                     <label for="deliveryCw">Delivery (CW)</label>

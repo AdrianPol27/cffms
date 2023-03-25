@@ -170,13 +170,17 @@
                   </div>
                   <div class="form-group">
                     <label for="fbBi">BI</label>
-                    <input type="text" class="form-control" id="fbBi" placeholder="Enter FB-BI" name="fb_bi">
+                    <input type="text" class="form-control" id="fbBi" placeholder="Enter BI" name="fb_bi">
                   </div>
-                  <div class="form-group">
+                  <div class="form-group m-0">
+                    <input type="checkbox" id="PLUDelivery">
+                    <label for="flexCheckChecked">PLU has delivery</label>
+                  </div>
+                  <div class="form-group d-none" id="deliveryCwFormGroup">
                     <label for="deliveryCw">Delivery (CW)</label>
                     <input type="text" class="form-control" id="deliveryCw" placeholder="Enter Delivery CW" name="delivery_cw">
                   </div>
-                  <div class="form-group">
+                  <div class="form-group d-none" id="deliverySnFormGroup">
                     <label for="deliverySn">Delivery (SN)</label>
                     <input type="text" class="form-control" id="deliverySn" placeholder="Enter Delivery SN" name="delivery_sn">
                   </div>

@@ -2,6 +2,12 @@
 
   class UserFacade extends DBConnection {
 
+    public function fetchAllUser() {
+      $sql = $this->connect()->prepare("SELECT * FROM user");
+      $sql->execute();
+      return $sql;
+    }
+
     public function verifyUsernameAndPassword($username, $password) {
       $sql = $this->connect()->prepare("SELECT username, password FROM user WHERE username = ? AND password = ?");
       $sql->execute([$username, $password]);
