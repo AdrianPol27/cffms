@@ -21,13 +21,13 @@
   if (isset($_SESSION["user_type"])) {
 		$userType = $_SESSION["user_type"];
 	}
-  if (isset($_GET["add_plu"])) {
-		$addPLUError = $_GET["add_plu"];
-    array_push($success, $addPLUError);
+  if (isset($_GET["add_user"])) {
+		$addUserError = $_GET["add_user"];
+    array_push($success, $addUserError);
 	}
-  if (isset($_GET["update_plu"])) {
-		$updatePLUError = $_GET["update_plu"];
-    array_push($info, $updatePLUError);
+  if (isset($_GET["update_user"])) {
+		$updateUserError = $_GET["update_user"];
+    array_push($info, $updateUserError);
 	}
   if (isset($_GET["delete_plu"])) {
 		$deletePLUError = $_GET["delete_plu"];
@@ -89,7 +89,7 @@
         <?php if ($userType == 'admin') { ?>
           <li class="nav-item">
             <a class="nav-link" href="users.php">
-              <i class="mdi mdi-home menu-icon"></i>
+              <i class="mdi mdi-account menu-icon"></i>
               <span class="menu-title">Users</span> 
             </a>
           </li>
@@ -104,6 +104,12 @@
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="transform.php">
+            <i class="mdi mdi-sync menu-icon"></i>
+            <span class="menu-title">Transform</span>
           </a>
         </li>
       </ul>
@@ -154,7 +160,7 @@
                         $users = $userFacade->fetchAllUser()->fetchAll();
                         foreach($users as $user) { ?>
                       <tr>
-                        <td><?= $user["full_name"] ?></td>
+                        <td class="text-uppercase"><?= $user["full_name"] ?></td>
                         <td><?= $user["username"] ?></td>
                         <td><?= $user["password"] ?></td>
                         <td><?= $user["user_type"] ?></td>
@@ -167,11 +173,11 @@
                             }
                           ?>
                         </td>
-                        <!-- <td>
-                          <a class="btn btn-info" href="view-plu.php?plu_num=<?= $PLU["plu_num"] ?>&plu_desc=<?= $PLU["plu_desc"] ?>&added_by=<?= $PLU["added_by"] ?>&added_on=<?= $PLU["added_on"] ?>&updated_by=<?= $PLU["updated_by"] ?>&updated_on=<?= $PLU["updated_on"] ?>&deleted_by=<?= $PLU["deleted_by"] ?>&deleted_on=<?= $PLU["deleted_on"] ?>"><i class="mdi mdi-eye"></i></a>
-                          <a class="btn btn-primary text-white" href="update-plu.php?id=<?= $PLU["id"] ?>&plu_num=<?= $PLU["plu_num"] ?>&plu_desc=<?= $PLU["plu_desc"] ?>&added_by=<?= $PLU["added_by"] ?>&added_on=<?= $PLU["added_on"] ?>&updated_by=<?= $PLU["updated_by"] ?>&updated_on=<?= $PLU["updated_on"] ?>&deleted_by=<?= $PLU["deleted_by"] ?>&deleted_on=<?= $PLU["deleted_on"] ?>"><i class="mdi mdi-lead-pencil"></i></a>
-                          <a class="btn btn-danger text-white" href="delete-plu.php?plu_num=<?= $PLU["plu_num"] ?>"><i class="mdi mdi-close-circle"></i></a>
-                        </td>  -->
+                        <td>
+                          <a class="btn btn-info" href="view-user.php?added_by=<?= $user["added_by"] ?>&added_on=<?= $user["added_on"] ?>&updated_by=<?= $user["updated_by"] ?>&updated_on=<?= $user["updated_on"] ?>&deleted_by=<?= $user["deleted_by"] ?>&deleted_on=<?= $user["deleted_on"] ?>"><i class="mdi mdi-eye"></i></a>
+                          <a class="btn btn-primary text-white" href="update-user.php?id=<?= $user["id"] ?>&full_name=<?= $user["full_name"] ?>&username=<?= $user["username"] ?>&password=<?= $user["password"] ?>"><i class="mdi mdi-lead-pencil"></i></a>
+                          <a class="btn btn-danger text-white" href="delete-user.php?id=<?= $user["id"] ?>&deleted_by=<?= $fullName ?>"><i class="mdi mdi-close-circle"></i></a>
+                        </td> 
                       </tr>
                       <?php } ?>
                     </tbody>

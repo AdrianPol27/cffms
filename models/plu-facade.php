@@ -20,15 +20,15 @@
       return $sql;
     }
 
-    public function deletePLU($PLUNum) {
-      $sql = $this->connect()->prepare("UPDATE plu SET is_deleted = 1 WHERE plu_num = $PLUNum");
+    public function deletePLU($PLUNum, $deletedBy, $deletedOn) {
+      $sql = $this->connect()->prepare("UPDATE plu SET deleted_by = '$deletedBy', deleted_on = '$deletedOn', is_deleted = 1 WHERE plu_num = $PLUNum");
       $sql->execute();
       return $sql;
     }
 
-    public function fetchPLUNumByDesc($PLUDescription) {
-      $sql = $this->connect()->prepare("SELECT plu_num FROM plu WHERE plu_desc = ?");
-      $sql->execute([$PLUDescription]);
+    public function fetchPLUByNum($PLUNum) {
+      $sql = $this->connect()->prepare("SELECT * FROM plu WHERE plu_num = ?");
+      $sql->execute([$PLUNum]);
       return $sql;
     }
 

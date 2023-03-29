@@ -7,7 +7,9 @@
 
 	if (isset($_GET["plu_num"])) {
 		$PLUNum = $_GET["plu_num"];
-		$deletePLU = $PLUFacade->deletePLU($PLUNum);
+    $deletedBy = $_GET["deleted_by"];
+    $deletedOn = date("Y-m-d");
+		$deletePLU = $PLUFacade->deletePLU($PLUNum, $deletedBy, $deletedOn);
 
 		if ($deletePLU) {
 			header("Location: plu.php?delete_plu=PLU has been deleted successfully!");

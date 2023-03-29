@@ -3,7 +3,7 @@
 	include('layout/header.php');
 	include('db/connector.php');
 	include('models/global-facade.php');
-	include('models/user-facade.php');
+	include('models/user-facade.php');+
   include('models/plu-facade.php');
   include('models/weight-facade.php');
   include('models/transform-facade.php');
@@ -26,17 +26,9 @@
   if (isset($_SESSION["user_type"])) {
 		$userType = $_SESSION["user_type"];
 	}
-  if (isset($_GET["add_weight"])) {
-		$addWeightError = $_GET["add_weight"];
-    array_push($success, $addWeightError);
-	}
-  if (isset($_GET["delete_weight"])) {
-		$deleteWeightError = $_GET["delete_weight"];
-    array_push($invalid, $deleteWeightError);
-	}
-  if (isset($_GET["update_weight"])) {
-		$updateWeightError = $_GET["update_weight"];
-    array_push($info, $updateWeightError);
+  if (isset($_GET["add_transform"])) {
+		$addTransformError = $_GET["add_transform"];
+    array_push($success, $addTransformError);
 	}
 
 	// If user is not signed in
@@ -105,13 +97,13 @@
             </a>
           </li>
         <?php } ?>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="transform.php">
             <i class="mdi mdi-sync menu-icon"></i>
             <span class="menu-title">Transform</span>
@@ -120,7 +112,7 @@
       </ul>
     </nav>
 
-     <!-- partial -->
+    <!-- partial -->
     <div class="main-panel">
       <div class="content-wrapper">
         <div class="row">
@@ -131,13 +123,13 @@
                   <h2>Overview</h2>
                   <div class="d-flex">
                     <i class="mdi mdi-home text-muted hover-cursor"></i>
-                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="weight.php" class="text-decoration-none text-reset">Weight</a>&nbsp;/&nbsp;</p>
+                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="transform.php" class="text-decoration-none text-reset">Weight</a>&nbsp;/&nbsp;</p>
                     <p class="text-primary mb-0 hover-cursor">Overview</p>
                   </div>
                 </div>
               </div>
               <div class="d-flex justify-content-between align-items-end flex-wrap">
-                <a class="btn btn-success mt-2 mt-xl-0" href="add-weight.php">Add Weight</a>
+                <a class="btn btn-success mt-2 mt-xl-0" href="add-transform.php">Add Transform</a>
               </div>
             </div>
           </div>
@@ -155,75 +147,28 @@
                         <th>PLU #</th>
                         <th>PLU Description</th>
                         <th>BI</th>
-                        <th>Transformed Into</th>
-                        <th>Delivery (CW)</th>
-                        <th>Delivery (SN)</th>
-                        <th>PS</th>
-                        <th>BI-D-PS</th>
-                        <th>EI</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                        $weights = $weightFacade->fetchAllWeight()->fetchAll();
-                        foreach($weights as $weight) { 
-                          if ($weight["added_on"] != $date) { 
+                        $transforms = $transformFacade->fetchAllTransform()->fetchAll();
+                        foreach($transforms as $transform) { 
+                          if ($transform["transformed_on"] != $date) { 
                             // Do nothing
                           } else {
                       ?>
                       <tr>
-                        <td><?= $weight["plu_num"] ?></td>
+                        <td><?= $transform["to_plu_num"] ?></td>
                         <td>
                           <?php
-                            $PLUNum = $weight["plu_num"];
+                            $PLUNum = $transform["to_plu_num"];
                             $PLUS = $PLUFacade->fetchPLUByNum($PLUNum);
                             foreach($PLUS as $PLU) { 
                               echo $PLU['plu_desc'];
-                            } ?>
+                            }?>
                         </td>
-                        <td>
-                          <?php
-                            
-                            if ($weight["is_transformed"] == 0) {
-                              echo number_format($weight["old_fb_bi"], 2); // Display the untransformed data if weight is not yet transformed
-                            } else {
-                              $fromPLUNum = $weight["plu_num"];
-                              $fetchProcessByPLUNumAndDates = $transformFacade->fetchProcessByPLUNumAndDate($fromPLUNum, $date);
-                              foreach($fetchProcessByPLUNumAndDates as $fetchProcessByPLUNumAndDate) { 
-                                $result = $weight["fb_bi"] - $fetchProcessByPLUNumAndDate['yield']; // Idisplay ang nabilin after ma transformed
-                                echo number_format($result, 2);
-                              }
-                            }
-                          ?>
-                        </td>
-                        <td>
-                          <?php
-                            // Fetch from process if PLU exist within the day
-                            $fromPLUNum = $weight["plu_num"];
-                            $fetchProcessByPLUNumAndDates = $transformFacade->fetchProcessByPLUNumAndDate($fromPLUNum, $date);
-                            foreach($fetchProcessByPLUNumAndDates as $fetchProcessByPLUNumAndDate) { 
-                              $PLUNum = $fetchProcessByPLUNumAndDate['to_plu_num'];
-                              $PLUS = $PLUFacade->fetchPLUByNum($PLUNum);
-                              foreach($PLUS as $PLU) {
-                                echo $PLU['plu_desc'];
-                              }
-                            }
-                          ?>
-                        </td>
-                        <td><?= number_format($weight["delivery_cw"], 2) ?></td>
-                        <td><?= $weight["delivery_sn"] ?></td>
-                        <td><?= $weight["ps"] ?></td>
-                        <td><?= number_format($weight["bi_d_ps"], 2) ?></td>
-                        <td>
-                          <?php
-                            if ($weight["ei"] == NULL) { 
-                              // Do nothing
-                            } else {
-                              echo number_format($weight["ei"], 2);
-                            }
-                          ?>
-                        </td>
+                        <td><?= number_format($transform["yield"], 2) ?></td>
                         <td>
                           <?php if ($userType == 'admin') { ?>
                             <a class="btn btn-info" href="view-weight.php?fb_bi=<?= $weight["fb_bi"] ?>&delivery_cw=<?= $weight["delivery_cw"] ?>&delivery_sn=<?= $weight["delivery_sn"] ?>&ps=<?= $weight["ps"] ?>&bi_d_ps=<?= $weight["bi_d_ps"] ?>&ei=<?= $weight["ei"] ?>&added_by=<?= $weight["added_by"] ?>&added_on=<?= $weight["added_on"] ?>&updated_by=<?= $weight["updated_by"] ?>&updated_on=<?= $weight["updated_on"] ?>&deleted_by=<?= $weight["deleted_by"] ?>&deleted_on=<?= $weight["deleted_on"] ?>"><i class="mdi mdi-eye"></i></a>
@@ -250,8 +195,8 @@
     </div>
   </div>
 
-   <!-- Update Modal -->
-   <div class="modal fade updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Update Modal -->
+  <div class="modal fade updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -285,6 +230,5 @@
       </div>
     </div>
   </div>
-
 
 <?php include('layout/footer.php') ?>

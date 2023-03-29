@@ -25,23 +25,30 @@
 	// If user is not signed in
 	$globalFacade->isSignedIn($userId);
 
-  if (isset($_POST["add_plu"])) {
-    $PLUNum = $_POST["plu_num"];
-    $PLUDescription = $_POST["plu_description"];
+  if (isset($_POST["add_user"])) {
     $addedBy = $fullName;
+    $fullName = $_POST["full_name"];
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $userType = $_POST["user_type"];
+    $isLoggedIn = 0;
     $addedOn = date("Y-m-d");
     $updatedBy = '';
     $deletedBy = '';
     $isDeleted = 0;
 
-    if (empty($PLUNum)) {
-      array_push($invalid, 'PLU Number should not be empty!');
-    } if (empty($PLUDescription)) {
-      array_push($invalid, 'PLU Description should not be empty!');
+    if (empty($fullName)) {
+      array_push($invalid, 'Full Name should not be empty!');
+    } if (empty($username)) {
+      array_push($invalid, 'Username should not be empty!');
+    } if (empty($password)) {
+      array_push($invalid, 'Password should not be empty!');
+    } if ($userType == 'none') {
+      array_push($invalid, 'User Type should not be empty!');
     } else {
-      $addPLU = $PLUFacade->addPLU($PLUNum, $PLUDescription, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted);
-      if ($addPLU) {
-        header("Location: plu.php?add_plu=PLU has been added successfully!");
+      $addUser = $userFacade->addUser($fullName, $username, $password, $userType, $isLoggedIn, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted);
+      if ($addUser) {
+        header("Location: users.php?add_user=User has been added successfully!");
       }
     }
   }
@@ -98,7 +105,7 @@
         <?php if ($userType == 'admin') { ?>
           <li class="nav-item active">
             <a class="nav-link" href="users.php">
-              <i class="mdi mdi-home menu-icon"></i>
+              <i class="mdi mdi-account menu-icon"></i>
               <span class="menu-title">Users</span> 
             </a>
           </li>
@@ -115,6 +122,12 @@
             <span class="menu-title">Weight</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="transform.php">
+            <i class="mdi mdi-sync menu-icon"></i>
+            <span class="menu-title">Transform</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -126,11 +139,11 @@
             <div class="d-flex justify-content-between flex-wrap">
               <div class="d-flex align-items-end flex-wrap">
                 <div class="me-md-3 me-xl-5">
-                  <h2>Add PLU</h2>
+                  <h2>Add User</h2>
                   <div class="d-flex">
                     <i class="mdi mdi-home text-muted hover-cursor"></i>
-                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="plu.php" class="text-decoration-none text-reset">PLU</a>&nbsp;/&nbsp;</p>
-                    <p class="text-primary mb-0 hover-cursor">Add PLU</p>
+                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="users.php" class="text-decoration-none text-reset">Users</a>&nbsp;/&nbsp;</p>
+                    <p class="text-primary mb-0 hover-cursor">Add User</p>
                   </div>
                 </div>
               </div>
@@ -141,17 +154,30 @@
           <div class="col-md-12 stretch-card">
             <div class="card">
               <div class="card-body">
-                <form class="forms-sample" action="add-plu.php" method="post">
+                <form class="forms-sample" action="add-user.php" method="post">
                   <?php include('errors.php'); ?>
                   <div class="form-group">
-                    <label for="pluNum">PLU #</label>
-                    <input type="text" class="form-control" id="pluNum" placeholder="Enter PLU #" name="plu_num">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter Full Name" name="full_name">
                   </div>
                   <div class="form-group">
-                    <label for="pluDescription">PLU Description</label>
-                    <input type="text" class="form-control" id="pluDescription" placeholder="Enter PLU Description" name="plu_description">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username">
                   </div>
-                  <button type="submit" class="btn btn-success me-2" name="add_plu">Add PLU</button>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="text" class="form-control" id="password" placeholder="Enter Password" name="password">
+                  </div>
+                  <div class="form-group">
+                    <label for="userType">User Type</label>
+                    <select class="form-select" id="userType" name="user_type">
+                      <option value="none">Select User Type</option>
+                      <option value="encoder">Encoder</option>
+                      <option value="supervisor">Supervisor</option>
+                      <option value="admin">Administrator</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-success me-2" name="add_user">Add User</button>
                 </form>
               </div>
             </div>

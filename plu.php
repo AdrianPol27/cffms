@@ -88,6 +88,12 @@
         </li>
         <?php if ($userType == 'admin') { ?>
           <li class="nav-item">
+            <a class="nav-link" href="users.php">
+              <i class="mdi mdi-account menu-icon"></i>
+              <span class="menu-title">Users</span> 
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="plu.php">
               <i class="mdi mdi-chart-pie menu-icon"></i>
               <span class="menu-title">PLU</span>
@@ -98,6 +104,12 @@
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="transform.php">
+            <i class="mdi mdi-sync menu-icon"></i>
+            <span class="menu-title">Transform</span>
           </a>
         </li>
       </ul>
@@ -150,7 +162,7 @@
                         <td>
                           <a class="btn btn-info" href="view-plu.php?plu_num=<?= $PLU["plu_num"] ?>&plu_desc=<?= $PLU["plu_desc"] ?>&added_by=<?= $PLU["added_by"] ?>&added_on=<?= $PLU["added_on"] ?>&updated_by=<?= $PLU["updated_by"] ?>&updated_on=<?= $PLU["updated_on"] ?>&deleted_by=<?= $PLU["deleted_by"] ?>&deleted_on=<?= $PLU["deleted_on"] ?>"><i class="mdi mdi-eye"></i></a>
                           <a class="btn btn-primary text-white" href="update-plu.php?id=<?= $PLU["id"] ?>&plu_num=<?= $PLU["plu_num"] ?>&plu_desc=<?= $PLU["plu_desc"] ?>&added_by=<?= $PLU["added_by"] ?>&added_on=<?= $PLU["added_on"] ?>&updated_by=<?= $PLU["updated_by"] ?>&updated_on=<?= $PLU["updated_on"] ?>&deleted_by=<?= $PLU["deleted_by"] ?>&deleted_on=<?= $PLU["deleted_on"] ?>"><i class="mdi mdi-lead-pencil"></i></a>
-                          <a class="btn btn-danger text-white" href="delete-plu.php?plu_num=<?= $PLU["plu_num"] ?>"><i class="mdi mdi-close-circle"></i></a>
+                          <a class="btn btn-danger text-white" href="delete-plu.php?plu_num=<?= $PLU["plu_num"] ?>&deleted_by=<?= $fullName ?>"><i class="mdi mdi-close-circle"></i></a>
                         </td> 
                       </tr>
                       <?php } ?>

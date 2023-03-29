@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2023 at 11:38 AM
+-- Generation Time: Mar 26, 2023 at 12:56 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `wscs`
+-- Database: `cffms`
 --
 
 -- --------------------------------------------------------
@@ -45,7 +45,7 @@ CREATE TABLE `plu` (
 --
 
 INSERT INTO `plu` (`id`, `plu_num`, `plu_desc`, `added_by`, `added_on`, `updated_by`, `updated_on`, `deleted_by`, `deleted_on`, `is_deleted`) VALUES
-(6, 1, 'CSI JLT BABY BACK', 'Adrian Pol Peligrino', '2023-03-22', 'Adrian Pol Peligrino', '2023-03-23', '', '0000-00-00', 0),
+(6, 1, 'CSI JLT BABY BACK', 'Adrian Pol Peligrino', '2023-03-22', 'Adrian Pol Peligrino', '2023-03-23', 'Admin', '2023-03-26', 0),
 (7, 2, 'CSI JLT BACON SLICE', 'Adrian Pol Peligrino', '2023-03-22', '', '0000-00-00', '', '0000-00-00', 0),
 (8, 3, 'CSI JLT LEAN GROUND', 'Adrian Pol Peligrino', '2023-03-22', '', '0000-00-00', '', '0000-00-00', 0),
 (9, 4, 'PFTJ REGULAR HD', 'Adrian Pol Peligrino', '2023-03-22', '', '0000-00-00', '', '0000-00-00', 0),
@@ -98,6 +98,30 @@ INSERT INTO `plu` (`id`, `plu_num`, `plu_desc`, `added_by`, `added_on`, `updated
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `process`
+--
+
+CREATE TABLE `process` (
+  `id` int(11) NOT NULL,
+  `from_plu_id` int(11) NOT NULL,
+  `from_plu` varchar(100) NOT NULL,
+  `to_plu_id` int(11) NOT NULL,
+  `to_plu` varchar(100) NOT NULL,
+  `yield` varchar(11) NOT NULL,
+  `transformed_by` varchar(100) NOT NULL,
+  `transformed_on` date NOT NULL,
+  `added_by` varchar(100) NOT NULL,
+  `added_on` date NOT NULL,
+  `updated_by` varchar(100) NOT NULL,
+  `updated_on` date NOT NULL,
+  `deleted_by` varchar(100) NOT NULL,
+  `deleted_on` date NOT NULL,
+  `is_deleted` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -106,18 +130,25 @@ CREATE TABLE `user` (
   `full_name` varchar(100) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `user_type` varchar(50) NOT NULL
+  `user_type` varchar(50) NOT NULL,
+  `added_by` varchar(100) NOT NULL,
+  `added_on` date NOT NULL,
+  `updated_by` varchar(100) NOT NULL,
+  `updated_on` date NOT NULL,
+  `deleted_by` varchar(100) NOT NULL,
+  `deleted_on` date NOT NULL,
+  `is_logged_in` tinyint(1) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `user_type`) VALUES
-(1, 'Adrian Pol Peligrino', 'test', 'test', 'admin'),
-(2, 'Test User', 'encoder', 'encoder', 'encoder'),
-(3, 'Test Supervisor', 'supervisor', 'supervisor', 'supervisor'),
-(4, 'Test Admin', 'admin', 'admin', 'admin');
+INSERT INTO `user` (`id`, `full_name`, `username`, `password`, `user_type`, `added_by`, `added_on`, `updated_by`, `updated_on`, `deleted_by`, `deleted_on`, `is_logged_in`, `is_deleted`) VALUES
+(1, 'Admin', 'admin', 'admin', 'admin', '', '0000-00-00', '', '0000-00-00', '', '0000-00-00', 0, 0),
+(5, 'Encoder', 'encoder', 'encoder', 'encoder', 'Admin', '2023-03-26', 'Admin', '2023-03-26', '', '0000-00-00', 0, 0),
+(7, 'Supervisor', 'supervisor', 'supervisor', 'supervisor', 'Admin', '2023-03-26', '', '0000-00-00', 'Admin', '2023-03-26', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -149,7 +180,9 @@ CREATE TABLE `weight` (
 --
 
 INSERT INTO `weight` (`id`, `plu_num`, `plu_desc`, `fb_bi`, `delivery_cw`, `delivery_sn`, `ps`, `bi_d_ps`, `ei`, `added_by`, `added_on`, `updated_by`, `updated_on`, `deleted_by`, `deleted_on`, `is_deleted`) VALUES
-(4, 2, 'CSI JLT BACON SLICE', ' 5.80 ', ' 6.00 ', 123456, ' 2.00 ', '9.8', '5', 'Test User', '2023-03-23', 'Adrian Pol Peligrino', '2023-03-23', '', '0000-00-00', 0);
+(25, 1, 'CSI JLT BABY BACK', ' 5.80 ', '0', 0, ' 2.00 ', '3.8', '2.5', 'Test Admin', '2023-03-26', 'Admin', '2023-03-26', 'Admin', '2023-03-26', 0),
+(27, 3, '', ' 5.80 ', '7', 123456, ' 2.00 ', '10.8', '2.5', 'Admin', '2023-03-26', '', '0000-00-00', '', '0000-00-00', 0),
+(28, 17, '', ' 5.80 ', '0', 0, ' 2.00 ', '3.8', '2', 'Admin', '2023-03-26', '', '0000-00-00', '', '0000-00-00', 0);
 
 --
 -- Indexes for dumped tables
@@ -159,6 +192,12 @@ INSERT INTO `weight` (`id`, `plu_num`, `plu_desc`, `fb_bi`, `delivery_cw`, `deli
 -- Indexes for table `plu`
 --
 ALTER TABLE `plu`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `process`
+--
+ALTER TABLE `process`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -184,16 +223,22 @@ ALTER TABLE `plu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
+-- AUTO_INCREMENT for table `process`
+--
+ALTER TABLE `process`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `weight`
 --
 ALTER TABLE `weight`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

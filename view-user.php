@@ -3,14 +3,8 @@
 	include('layout/header.php');
 	include('db/connector.php');
 	include('models/global-facade.php');
-	include('models/user-facade.php');
-  include('models/plu-facade.php');
-  include('models/weight-facade.php');
 
 	$globalFacade = new GlobalFacade;
-	$userFacade = new UserFacade;
-  $PLUFacade = new PLUFacade;
-  $weightFacade = new WeightFacade;
 
 	$userId = 0;
 
@@ -23,57 +17,33 @@
   if (isset($_SESSION["user_type"])) {
 		$userType = $_SESSION["user_type"];
 	}
+	if (isset($_GET["plu_num"])) {
+		$PLUNum = $_GET["plu_num"];
+	}
+  if (isset($_GET["plu_desc"])) {
+		$PLUDesc = $_GET["plu_desc"];
+	}
+	if (isset($_GET["added_by"])) {
+		$addedBy = $_GET["added_by"];
+	}
+  if (isset($_GET["added_on"])) {
+		$addedOn = $_GET["added_on"];
+	}
+  if (isset($_GET["updated_by"])) {
+		$updatedBy = $_GET["updated_by"];
+	}
+  if (isset($_GET["updated_on"])) {
+		$updatedOn = $_GET["updated_on"];
+	}
+	if (isset($_GET["deleted_by"])) {
+		$deletedBy = $_GET["deleted_by"];
+	}
+  if (isset($_GET["deleted_on"])) {
+		$deletedOn = $_GET["deleted_on"];
+	}
 
 	// If user is not signed in
 	$globalFacade->isSignedIn($userId);
-
-  if (isset($_POST["add_weight"])) {
-    $PLUNum = $_POST["plu_num"];
-    $PLUS = $PLUFacade->fetchPLUByNum($PLUNum);
-    foreach($PLUS as $PLU) { 
-      $PLUDescription = $PLU['plu_desc'];
-    }
-    if (empty($_POST["fb_bi"])) {
-      $oldFbBi = 0;
-      $fbBi = 0;
-    } else {
-      $oldFbBi = $_POST["fb_bi"];
-      $fbBi = $_POST["fb_bi"];
-    }
-    if (empty($_POST["delivery_cw"])) {
-      $deliveryCw = 0;
-    } else {
-      $deliveryCw = $_POST["delivery_cw"];
-    }
-    $deliverySn = $_POST["delivery_sn"];
-    if (empty($_POST["ps"])) {
-      $ps = 0;
-    } else {
-      $ps = $_POST["ps"];
-    }
-    $biDPs = (($fbBi + $deliveryCw) - $ps);
-    $ei = $_POST["ei"];
-    if (empty($_POST["ei"])) {
-      $ei = 0;
-    } else {
-      $ei = $_POST["ei"];
-    }
-    $addedBy = $fullName;
-    $addedOn = date("Y-m-d");
-    $updatedBy = '';
-    $deletedBy = '';
-    $isDeleted = 0;
-
-    $verifyWeightNumFromDate = $weightFacade->verifyWeightNumFromDate($PLUNum, $addedOn);
-    if ($verifyWeightNumFromDate > 0) {
-      array_push($invalid, "PLU weight already been added for this day!");
-    } else {
-      $addWeight = $weightFacade->addWeight($PLUNum, $oldFbBi, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $ei, $addedBy, $addedOn, $updatedBy, $deletedBy, $isDeleted);
-      if ($addWeight) {
-        header("Location: weight.php?add_weight=Weight has been added successfully!");
-      }
-    }
-  }
 
 ?>
 
@@ -125,7 +95,7 @@
           </a>
         </li>
         <?php if ($userType == 'admin') { ?>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="users.php">
               <i class="mdi mdi-account menu-icon"></i>
               <span class="menu-title">Users</span> 
@@ -138,7 +108,7 @@
             </a>
           </li>
         <?php } ?>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
@@ -161,11 +131,11 @@
             <div class="d-flex justify-content-between flex-wrap">
               <div class="d-flex align-items-end flex-wrap">
                 <div class="me-md-3 me-xl-5">
-                  <h2>Add Weight</h2>
+                  <h2>View User</h2>
                   <div class="d-flex">
                     <i class="mdi mdi-home text-muted hover-cursor"></i>
-                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="weight.php" class="text-decoration-none text-reset">Weight</a>&nbsp;/&nbsp;</p>
-                    <p class="text-primary mb-0 hover-cursor">Add Weight</p>
+                    <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;<a href="users.php" class="text-decoration-none text-reset">Users</a>&nbsp;/&nbsp;</p>
+                    <p class="text-primary mb-0 hover-cursor">View User</p>
                   </div>
                 </div>
               </div>
@@ -176,44 +146,29 @@
           <div class="col-md-12 stretch-card">
             <div class="card">
               <div class="card-body">
-                <form class="forms-sample" action="add-weight.php" method="post">
-                  <?php include('errors.php'); ?>
-                  <div class="form-group">
-                    <label for="pluDesc">PLU Description</label>
-                    <select class="form-select" id="pluDesc" name="plu_num">
-                      <?php
-                        $PLUS = $PLUFacade->fetchAllPLU()->fetchAll();
-                        foreach($PLUS as $PLU) { ?>
-                        <option value="<?= $PLU["plu_num"] ?>"><?= $PLU["plu_desc"] ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="fbBi">BI</label>
-                    <input type="text" class="form-control" id="fbBi" placeholder="Enter BI" name="fb_bi">
-                  </div>
-                  <div class="form-group m-0">
-                    <input type="checkbox" id="PLUDelivery">
-                    <label for="flexCheckChecked">PLU has delivery</label>
-                  </div>
-                  <div class="form-group d-none" id="deliveryCwFormGroup">
-                    <label for="deliveryCw">Delivery (CW)</label>
-                    <input type="text" class="form-control" id="deliveryCw" placeholder="Enter Delivery CW" name="delivery_cw">
-                  </div>
-                  <div class="form-group d-none" id="deliverySnFormGroup">
-                    <label for="deliverySn">Delivery (SN)</label>
-                    <input type="text" class="form-control" id="deliverySn" placeholder="Enter Delivery SN" name="delivery_sn">
-                  </div>
-                  <div class="form-group">
-                    <label for="ps">PS</label>
-                    <input type="text" class="form-control" id="ps" placeholder="Enter Delivery PS" name="ps">
-                  </div>
-                  <div class="form-group">
-                    <label for="ei">EI</label>
-                    <input type="text" class="form-control" id="ei" placeholder="Enter EI" name="ei">
-                  </div>
-                  <button type="submit" class="btn btn-success me-2" name="add_weight">Add Weight</button>
-                </form>
+                <p class="card-title">PLU Information</p>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Added By</th>
+                        <th>Added On</th>
+                        <th>Updated By</th>
+                        <th>Updated On</th>
+                        <th>Deleted By</th>
+                        <th>Deleted On</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-uppercase">
+                      <tr>
+                        <td><?= $addedBy ?></td>
+                        <td><?= $addedOn ?></td>
+                        <td><?= $updatedBy ?></td>
+                        <td><?= $updatedOn ?></td>
+                        <td><?= $deletedBy ?></td>
+                        <td><?= $deletedOn ?></td>
+                      </tr>
+                    </tbody>
+                  </table>
               </div>
             </div>
           </div>

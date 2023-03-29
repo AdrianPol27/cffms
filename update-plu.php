@@ -103,6 +103,12 @@
           </a>
         </li>
         <?php if ($userType == 'admin') { ?>
+          <li class="nav-item">
+            <a class="nav-link" href="users.php">
+              <i class="mdi mdi-account menu-icon"></i>
+              <span class="menu-title">Users</span> 
+            </a>
+          </li>
           <li class="nav-item active">
             <a class="nav-link" href="plu.php">
               <i class="mdi mdi-chart-pie menu-icon"></i>
@@ -114,6 +120,12 @@
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="transform.php">
+            <i class="mdi mdi-sync menu-icon"></i>
+            <span class="menu-title">Transform</span>
           </a>
         </li>
       </ul>

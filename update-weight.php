@@ -47,6 +47,7 @@
 
   if (isset($_POST["update_weight"])) {
     $id = $_POST["id"];
+    $oldFbBi = $_POST["fb_bi"];
     $fbBi = $_POST["fb_bi"];
     $deliveryCw = $_POST["delivery_cw"];
     $deliverySn = $_POST["delivery_sn"];
@@ -67,7 +68,7 @@
     } if (empty($ei)) {
       array_push($invalid, 'EI should not be empty!');
     } else {
-      $updateWeight = $weightFacade->updateWeight($id, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $ei, $updatedBy, $updatedOn);
+      $updateWeight = $weightFacade->updateWeight($id, $oldFbBi, $fbBi, $deliveryCw, $deliverySn, $ps, $biDPs, $ei, $updatedBy, $updatedOn);
       if ($updateWeight) {
         header("Location: weight.php?update_weight=Weight has been updated successfully!");
       }
@@ -125,6 +126,12 @@
         </li>
         <?php if ($userType == 'admin') { ?>
           <li class="nav-item">
+            <a class="nav-link" href="users.php">
+              <i class="mdi mdi-account menu-icon"></i>
+              <span class="menu-title">Users</span> 
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="plu.php">
               <i class="mdi mdi-chart-pie menu-icon"></i>
               <span class="menu-title">PLU</span>
@@ -135,6 +142,12 @@
           <a class="nav-link" href="weight.php">
             <i class="mdi mdi-scale menu-icon"></i>
             <span class="menu-title">Weight</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="transform.php">
+            <i class="mdi mdi-sync menu-icon"></i>
+            <span class="menu-title">Transform</span>
           </a>
         </li>
       </ul>
